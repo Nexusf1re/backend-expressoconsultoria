@@ -415,7 +415,7 @@ Se você quiser subir apenas o serviço MySQL definido no `docker-compose.yml`, 
 
 ```bash
 # Sobe apenas o serviço chamado `mysql` em background
-docker compose up mysql -d
+docker-compose up -d mysql
 
 # Aguarda alguns segundos para o container inicializar (ajuste se necessário)
 sleep 30
