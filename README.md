@@ -195,22 +195,109 @@ npm run docker:build     # Constrói e inicia containers
 
 ## 🐳 Docker
 
-### Usando Docker Compose
-```bash
-# Iniciar todos os serviços
-npm run docker:up
+## 🪟 WSL / Ubuntu — Instalar Docker (passo-a-passo)
 
-# Parar todos os serviços
-npm run docker:down
+Se você usa Windows e prefere rodar containers dentro do WSL (Ubuntu), siga estes passos. Eles se baseiam nas instruções mínimas que você forneceu e incluem observações para evitar problemas comuns com permissões e reinício.
 
-# Reconstruir e iniciar
-npm run docker:build
+1) Instalar WSL com Ubuntu (PowerShell como Administrador)
+
+```powershell
+# Instala o WSL e a distribuição Ubuntu
+wsl --install -d Ubuntu
+
+# (Opcional) Define o WSL2 como padrão
+wsl --set-default-version 2
 ```
 
-### Arquivos Docker
-- `Dockerfile` - Imagem da aplicação
-- `docker-compose.yml` - Orquestração dos serviços
-- `mysql-init/` - Scripts de inicialização do MySQL
+2) Abra o Ubuntu (via app WSL) e atualize pacotes
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+3) Instalar Docker e Docker Compose
+
+```bash
+# Instala o motor Docker
+sudo apt install -y docker.io
+
+# Instala o docker-compose (ou use o plugin moderno se preferir)
+sudo apt install -y docker-compose
+```
+
+4) Iniciar o serviço Docker e adicionar seu usuário ao grupo "docker"
+
+```bash
+# Inicia o serviço (em algumas imagens WSL systemd pode não existir; use `service` se necessário)
+sudo systemctl enable --now docker 2>/dev/null || sudo service docker start
+
+# Adiciona o usuário atual ao grupo docker para executar comandos sem sudo
+sudo usermod -aG docker $USER
+```
+
+Observação: após `usermod -aG docker $USER` você precisa encerrar a sessão WSL e abrir novamente para que a nova associação de grupo tenha efeito. Feche a janela/terminal WSL ou execute `exit` e reabra o Ubuntu. Alternativamente, execute `newgrp docker` na mesma sessão para aplicar a mudança imediatamente.
+
+5) (Opcional) Definir Ubuntu como distribuição padrão do WSL
+
+```powershell
+wsl --set-default Ubuntu
+```
+
+6) Testar o Docker (no WSL)
+
+```bash
+# Verifica se o Docker responde
+docker version
+
+# Teste simples — executa a imagem hello-world
+docker run hello-world
+```
+
+Se ver a mensagem do `hello-world`, o Docker está funcionando corretamente.
+
+7) Dicas e problemas comuns
+- Se `docker run` falhar com permissão, confirme que você reabriu a sessão WSL (ou use `newgrp docker`).
+- Se `systemctl` não funcionar no WSL (algumas builds não têm systemd), use `sudo service docker start` e verifique logs com `sudo journalctl -u docker --no-pager` (nem todas as distribuições via WSL têm journalctl).
+- Para usar `docker-compose` com a sintaxe v2 (`docker compose up`), instale o plugin `docker-compose-plugin` ou use o binário oficial do Compose, se necessário.
+- Reinicie o WSL (Windows) com `wsl --shutdown` se algo ficar inconsistente.
+
+8) (Opcional) Executar como ambiente de desenvolvimento
+
+- Recomendo abrir o projeto a partir do WSL (no Ubuntu): navegue até a pasta do projeto em WSL e rode `code .` — assim o VS Code usa a extensão Remote - WSL e evita problemas de permissões/IO entre Windows e WSL.
+
+Segurança: não exponha o daemon Docker publicamente sem proteção; para produção, use autenticação, firewall e práticas recomendadas.
+
+
+### Subir apenas o serviço MySQL com Docker Compose (exemplo)
+
+Se você quiser subir apenas o serviço MySQL definido no `docker-compose.yml`, use os comandos abaixo (por exemplo, dentro do WSL/Ubuntu ou em um terminal com Docker configurado):
+
+```bash
+# Sobe apenas o serviço chamado `mysql` em background
+docker compose up mysql -d
+
+# Aguarda alguns segundos para o container inicializar (ajuste se necessário)
+sleep 30
+
+# Verifica containers em execução
+docker ps
+```
+
+Observações úteis:
+- Se o nome do serviço no `docker-compose.yml` for diferente de `mysql`, troque pelo nome correto.
+- Para ver logs em tempo real: `docker compose logs -f mysql` ou `docker logs -f <container_id>`.
+- Após o container do MySQL subir, atualize o `DATABASE_URL` no seu arquivo `.env` e rode as migrações:
+
+```bash
+# Exemplo de atualização do .env
+# DATABASE_URL="mysql://user:password@127.0.0.1:3306/analytics"
+
+# Executar migrações e seed
+npm run prisma:migrate
+npm run prisma:seed
+```
+
+Se algo der errado, inspecione os logs do container e confirme que as credenciais e a porta no `DATABASE_URL` correspondem ao container MySQL.
 
 ## 📋 Variáveis de Ambiente
 
