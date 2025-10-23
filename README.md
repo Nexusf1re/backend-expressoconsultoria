@@ -99,22 +99,22 @@ GET /docs
 
 ### Gráfico de Pizza por Categoria
 ```bash
-curl "http://localhost:3000/charts/pie?startDate=2024-01-01&endDate=2024-12-31&dimension=category"
+curl "http://localhost:3000/charts/pie?startDate=2025-01-01&endDate=2025-12-31&dimension=category"
 ```
 
 ### Gráfico de Linha por Dia
 ```bash
-curl "http://localhost:3000/charts/line?startDate=2024-01-01&endDate=2024-12-31&groupBy=day"
+curl "http://localhost:3000/charts/line?startDate=2025-01-01&endDate=2025-12-31&groupBy=day"
 ```
 
 ### Gráfico de Barras por Região
 ```bash
-curl "http://localhost:3000/charts/bar?startDate=2024-01-01&endDate=2024-12-31&dimension=region"
+curl "http://localhost:3000/charts/bar?startDate=2025-01-01&endDate=2025-12-31&dimension=region"
 ```
 
 ### Gráfico de Área por Canal
 ```bash
-curl "http://localhost:3000/charts/area?startDate=2024-01-01&endDate=2024-12-31&groupBy=week&splitBy=channel"
+curl "http://localhost:3000/charts/area?startDate=2025-01-01&endDate=2025-12-31&groupBy=week&splitBy=channel"
 ```
 
 ## 🏗️ Arquitetura
