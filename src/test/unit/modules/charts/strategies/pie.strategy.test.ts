@@ -44,6 +44,6 @@ describe('PieStrategy', () => {
       order: 'desc',
     };
 
-    await expect(strategy.execute(query)).rejects.toThrow('Dimension is required for pie charts');
+    await expect(strategy.execute(query)).rejects.toThrow('Dimensão é obrigatória para gráficos de pizza');
   });
 });

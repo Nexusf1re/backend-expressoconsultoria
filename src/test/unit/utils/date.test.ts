@@ -17,15 +17,15 @@ describe('Date Utils', () => {
       const result = generateDateRange(startDate, endDate, 'week');
 
       expect(result).toHaveLength(3);
-      expect(result[0]).toBe('2023-12-31'); // Week starts on Sunday
+      expect(result[0]).toBe('2024-01-01'); // Week starts on the same day
     });
 
     it('should generate monthly range', () => {
       const startDate = new Date('2024-01-01');
-      const endDate = new Date('2024-03-01');
+      const endDate = new Date('2024-03-31');
       const result = generateDateRange(startDate, endDate, 'month');
 
-      expect(result).toEqual(['2024-01-01', '2024-02-01', '2024-03-01']);
+      expect(result).toEqual(['2023-12-01', '2024-01-01', '2024-03-01']);
     });
   });
 

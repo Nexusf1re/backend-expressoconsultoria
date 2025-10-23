@@ -78,7 +78,7 @@ describe('AreaStrategy', () => {
       order: 'desc',
     };
 
-    await expect(strategy.execute(query)).rejects.toThrow('groupBy is required for area charts');
+    await expect(strategy.execute(query)).rejects.toThrow('Agrupamento temporal (groupBy) é obrigatório para gráficos de área');
   });
 
   it('should throw error when splitBy is missing', async () => {
@@ -90,6 +90,6 @@ describe('AreaStrategy', () => {
       order: 'desc',
     };
 
-    await expect(strategy.execute(query)).rejects.toThrow('splitBy is required for area charts');
+    await expect(strategy.execute(query)).rejects.toThrow('Dimensão de divisão (splitBy) é obrigatória para gráficos de área');
   });
 });

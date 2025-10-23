@@ -19,7 +19,7 @@ describe('Metric Utils', () => {
     });
 
     it('should throw error for invalid metric', () => {
-      expect(() => parseMetric('invalid(amount)')).toThrow('Invalid metric format');
+      expect(() => parseMetric('invalid(amount)')).toThrow('Formato de métrica inválido');
     });
   });
 
@@ -40,7 +40,7 @@ describe('Metric Utils', () => {
     });
 
     it('should throw error for unsupported operation', () => {
-      expect(() => getPrismaAggregation('amount', 'max' as any)).toThrow('Unsupported operation');
+      expect(() => getPrismaAggregation('amount', 'max' as any)).toThrow('Operação não suportada');
     });
   });
 });

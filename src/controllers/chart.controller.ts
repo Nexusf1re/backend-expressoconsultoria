@@ -3,6 +3,7 @@ import { ChartQuerySchema, ChartTypeSchema } from '../schemas/chart';
 import { ChartService } from '../modules/charts/services/chart.service';
 import { SaleRepository } from '../repositories/sale.repository';
 import { logger } from '../config/logger';
+import { ZodError } from 'zod';
 
 /**
  * Controller para processamento de requisições de gráficos.
@@ -45,21 +46,74 @@ export class ChartController {
         requestId: req.id 
       });
 
-      if (error instanceof Error) {
-        if (error.message.includes('required')) {
+      // Trata erros de validação do Zod
+      if (error instanceof ZodError) {
+        const firstError = error.errors[0];
+        
+        // Erro de tipo de gráfico inválido
+        if (firstError.path.length === 0 && firstError.code === 'invalid_enum_value') {
           res.status(400).json({
             error: {
-              code: 'VALIDATION_ERROR',
-              message: 'Parâmetros obrigatórios não fornecidos: ' + error.message,
-              suggestion: 'Verifique a documentação em /docs para ver os parâmetros necessários'
+              code: 'INVALID_CHART_TYPE',
+              message: 'Tipo de gráfico inválido',
+              suggestion: 'Tipos suportados: pie, line, bar, area'
             },
           });
           return;
         }
 
-        if (error.message.includes('Dimension is required') || 
-            error.message.includes('groupBy is required') ||
-            error.message.includes('splitBy is required')) {
+        // Erro de formato de data
+        if (firstError.path.includes('startDate') || firstError.path.includes('endDate')) {
+          res.status(400).json({
+            error: {
+              code: 'INVALID_DATE_FORMAT',
+              message: firstError.message,
+              suggestion: 'Use o formato YYYY-MM-DD para as datas'
+            },
+          });
+          return;
+        }
+
+        // Erro de range de datas
+        if (firstError.path.includes('startDate') && firstError.message.includes('must be less than or equal to endDate')) {
+          res.status(400).json({
+            error: {
+              code: 'INVALID_DATE_RANGE',
+              message: 'Data de início deve ser anterior à data de fim',
+              suggestion: 'Verifique se startDate <= endDate'
+            },
+          });
+          return;
+        }
+
+        // Erro de range muito longo
+        if (firstError.path.includes('endDate') && firstError.message.includes('must not exceed 365 days')) {
+          res.status(400).json({
+            error: {
+              code: 'DATE_RANGE_TOO_LONG',
+              message: 'Período não pode exceder 365 dias',
+              suggestion: 'Reduza o intervalo de datas'
+            },
+          });
+          return;
+        }
+
+        // Outros erros de validação
+        res.status(400).json({
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: firstError.message,
+            suggestion: 'Verifique os parâmetros fornecidos'
+          },
+        });
+        return;
+      }
+
+      // Trata erros de negócio (validações específicas dos gráficos)
+      if (error instanceof Error) {
+        if (error.message.includes('Dimensão é obrigatória') || 
+            error.message.includes('Agrupamento temporal') ||
+            error.message.includes('Dimensão de divisão')) {
           res.status(422).json({
             error: {
               code: 'INCOMPATIBLE_PARAMETERS',

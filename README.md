@@ -146,22 +146,163 @@ src/
 
 ## 🧪 Testes
 
-### Executar Testes
+### Passo a Passo para Executar os Testes
+
+#### 1. **Configuração Inicial do Ambiente de Teste**
+
 ```bash
-# Todos os testes
+# 1. Certifique-se de que o MySQL está rodando
+# Se usando Docker:
+docker compose up mysql -d
+
+# 2. Configure o banco de dados de teste
+npm run test:setup
+```
+
+#### 2. **Executar os Testes**
+
+```bash
+# Executar todos os testes (42 testes)
 npm test
 
-# Com cobertura
+# Executar com cobertura de código
 npm run test:coverage
 
-# Modo watch
+# Executar em modo watch (desenvolvimento)
 npm run test:watch
 ```
 
-### Estrutura de Testes
-- **Unitários** - Testam componentes isolados
-- **Integração** - Testam fluxos completos
-- **Cobertura mínima** - 80%
+#### 3. **Estrutura dos Testes**
+
+O sistema possui **42 testes** organizados em:
+
+**Testes Unitários (30 testes)**
+- ✅ **Estratégias de Gráficos** - Validações de negócio
+- ✅ **Utilitários** - Funções de data e métricas
+- ✅ **Factories** - Criação de estratégias
+- ✅ **Mocks** - Dados simulados, sem dependência de banco
+
+**Testes de Integração (12 testes)**
+- ✅ **Controllers HTTP** - Endpoints completos
+- ✅ **Validação de Parâmetros** - Códigos de erro 400/422
+- ✅ **Banco de Dados** - Operações reais com `analytics_test`
+- ✅ **Health Check** - Status da aplicação
+
+#### 4. **Configuração do Banco de Teste**
+
+O sistema usa um banco de dados separado para testes:
+
+```typescript
+// Banco de teste: analytics_test
+DATABASE_URL=mysql://root:root@localhost:3306/analytics_test
+```
+
+**Scripts de Setup:**
+- `scripts/setup-test-db.bat` (Windows)
+- `scripts/setup-test-db.sh` (Linux/Mac)
+- `scripts/create-test-db.sql` (SQL)
+
+#### 5. **Resilência dos Testes**
+
+Os testes são **resilientes** e funcionam em qualquer ambiente:
+
+```bash
+# ✅ Com banco de dados disponível
+# - Executa todos os 42 testes
+# - Testes de integração com dados reais
+
+# ✅ Sem banco de dados
+# - Executa 30 testes unitários
+# - Pula testes de integração com avisos informativos
+```
+
+#### 6. **Cobertura de Testes**
+
+**Cobertura Mínima:** 70% (configurável em `vitest.config.ts`)
+
+```bash
+# Verificar cobertura
+npm run test:coverage
+
+# Relatório HTML gerado em: coverage/index.html
+```
+
+#### 7. **Tipos de Validação Testados**
+
+**Validação de Entrada (400)**
+- ❌ Formato de data inválido
+- ❌ Tipo de gráfico inválido  
+- ❌ Range de datas inválido
+- ❌ Data de início > data de fim
+
+**Validação de Negócio (422)**
+- ❌ Dimensão obrigatória para gráficos de pizza/barras
+- ❌ Agrupamento temporal obrigatório para gráficos de linha/área
+- ❌ Dimensão de divisão obrigatória para gráficos de área
+
+**Funcionalidades Testadas**
+- ✅ Geração de dados para todos os tipos de gráficos
+- ✅ Agregações por dimensão e tempo
+- ✅ Tratamento de erros HTTP
+- ✅ Validação de parâmetros
+- ✅ Conectividade com banco de dados
+
+#### 8. **Troubleshooting**
+
+**Problema: Banco de teste não existe**
+```bash
+# Solução: Execute o setup
+npm run test:setup
+
+# Ou manualmente:
+mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS analytics_test;"
+```
+
+**Problema: Migrações não aplicadas**
+```bash
+# Aplique as migrações no banco de teste
+$env:DATABASE_URL="mysql://root:root@localhost:3306/analytics_test"; npx prisma migrate deploy
+```
+
+**Problema: Testes falhando com erro 500**
+```bash
+# Verifique se o banco está rodando
+docker ps | grep mysql
+
+# Reinicie o container se necessário
+docker compose restart mysql
+```
+
+#### 9. **Scripts de Teste Disponíveis**
+
+```bash
+# Execução
+npm test                 # Todos os testes
+npm run test:watch       # Modo watch
+npm run test:coverage    # Com cobertura
+
+# Setup
+npm run test:setup       # Configura banco de teste
+```
+
+#### 10. **Resultado Esperado**
+
+```bash
+✓ src/test/unit/utils/date.test.ts (5)
+✓ src/test/unit/utils/metric.test.ts (8)
+✓ src/test/unit/modules/charts/strategies/area.strategy.test.ts (4)
+✓ src/test/unit/modules/charts/factories/chart.factory.test.ts (5)
+✓ src/test/unit/modules/charts/strategies/line.strategy.test.ts (2)
+✓ src/test/unit/modules/charts/strategies/bar.strategy.test.ts (2)
+✓ src/test/unit/modules/charts/strategies/pie.strategy.test.ts (2)
+✓ src/test/integration/controllers/chart.controller.test.ts (13)
+✓ src/test/integration/controllers/health.controller.test.ts (1)
+
+Test Files  9 passed (9)
+Tests  42 passed (42)
+```
+
+**🎯 Meta:** 100% dos testes passando (42/42) ✅
 
 ## 🔧 Scripts Disponíveis
 

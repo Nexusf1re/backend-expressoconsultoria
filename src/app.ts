@@ -34,7 +34,7 @@ export function createApp(): express.Application {
   app.use('/docs', docsRoutes);
 
   // Endpoint raiz
-  app.get('/', (req, res) => {
+  app.get('/', (_req, res) => {
     res.json({
       message: 'Analytics API - Sua ferramenta para análise de dados',
       version: '1.0.0',

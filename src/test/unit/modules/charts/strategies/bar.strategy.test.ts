@@ -52,6 +52,6 @@ describe('BarStrategy', () => {
       order: 'desc',
     };
 
-    await expect(strategy.execute(query)).rejects.toThrow('Dimension is required for bar charts');
+    await expect(strategy.execute(query)).rejects.toThrow('Dimensão é obrigatória para gráficos de barras');
   });
 });

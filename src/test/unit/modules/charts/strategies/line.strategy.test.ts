@@ -52,6 +52,6 @@ describe('LineStrategy', () => {
       order: 'desc',
     };
 
-    await expect(strategy.execute(query)).rejects.toThrow('groupBy is required for line charts');
+    await expect(strategy.execute(query)).rejects.toThrow('Agrupamento temporal (groupBy) é obrigatório para gráficos de linha');
   });
 });
