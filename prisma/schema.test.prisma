@@ -1,0 +1,25 @@
+// This is your Prisma schema file for testing,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./test.db"
+}
+
+model Sale {
+  id         Int      @id @default(autoincrement())
+  occurredAt DateTime @index
+  category   String   @index
+  product    String
+  amount     Decimal  @db.Decimal(12, 2)
+  region     String   @index
+  channel    String   @index
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("sales")
+}

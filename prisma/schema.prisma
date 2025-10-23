@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Sale {
+  id         Int      @id @default(autoincrement())
+  occurredAt DateTime
+  category   String
+  product    String
+  amount     Decimal  @db.Decimal(12, 2)
+  region     String
+  channel    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([occurredAt])
+  @@index([category])
+  @@index([region])
+  @@index([channel])
+  @@map("sales")
+}
