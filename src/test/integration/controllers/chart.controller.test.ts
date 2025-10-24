@@ -144,49 +144,6 @@ describe('ChartController Integration', () => {
     });
   });
 
-  describe('GET /charts/area', () => {
-    it('should return area chart data', async () => {
-      const response = await request(app)
-        .get('/charts/area')
-        .query({
-          startDate: '2024-01-01',
-          endDate: '2024-01-31',
-          groupBy: 'day',
-          splitBy: 'channel',
-          metric: 'sum(amount)',
-        })
-        .expect(200);
-
-      expect(response.body).toHaveProperty('labels');
-      expect(response.body).toHaveProperty('datasets');
-      expect(Array.isArray(response.body.labels)).toBe(true);
-      expect(Array.isArray(response.body.datasets)).toBe(true);
-    });
-
-    it('should return 422 for missing groupBy', async () => {
-      await request(app)
-        .get('/charts/area')
-        .query({
-          startDate: '2024-01-01',
-          endDate: '2024-01-31',
-          splitBy: 'channel',
-          metric: 'sum(amount)',
-        })
-        .expect(422);
-    });
-
-    it('should return 422 for missing splitBy', async () => {
-      await request(app)
-        .get('/charts/area')
-        .query({
-          startDate: '2024-01-01',
-          endDate: '2024-01-31',
-          groupBy: 'day',
-          metric: 'sum(amount)',
-        })
-        .expect(422);
-    });
-  });
 
   describe('Error handling', () => {
     it('should return 400 for invalid chart type', async () => {

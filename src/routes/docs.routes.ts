@@ -111,7 +111,7 @@ const options = {
               required: true,
               schema: {
                 type: 'string',
-                enum: ['pie', 'line', 'bar', 'area'],
+                enum: ['pie', 'line', 'bar'],
               },
               description: 'Type of chart',
             },
@@ -137,7 +137,7 @@ const options = {
                 type: 'string',
                 enum: ['day', 'week', 'month'],
               },
-              description: 'Group by time period (required for line/area charts)',
+              description: 'Group by time period (required for line charts)',
             },
             {
               name: 'dimension',
@@ -186,7 +186,7 @@ const options = {
                 type: 'string',
                 enum: ['category', 'region', 'product', 'channel'],
               },
-              description: 'Split series by dimension (required for area charts)',
+              description: 'Split series by dimension',
             },
           ],
           responses: {

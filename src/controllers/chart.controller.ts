@@ -56,7 +56,7 @@ export class ChartController {
             error: {
               code: 'INVALID_CHART_TYPE',
               message: 'Tipo de gráfico inválido',
-              suggestion: 'Tipos suportados: pie, line, bar, area'
+              suggestion: 'Tipos suportados: pie, line, bar'
             },
           });
           return;
