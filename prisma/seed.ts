@@ -74,7 +74,7 @@ async function main() {
   // Generate sales data for the last 6 months
   const endDate = new Date();
   const startDate = new Date();
-  startDate.setMonth(startDate.getMonth() - 6);
+  startDate.setMonth(startDate.getMonth() - 12);
 
   const sales = [];
   const numberOfSales = 5000;
