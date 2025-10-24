@@ -65,7 +65,19 @@ cp env.example .env
 # Configure as variáveis de ambiente no .env
 ```
 
-4. **Configure o banco de dados**
+4. **Inicie o MySQL com Docker**
+```bash
+# Iniciar MySQL
+docker-compose up -d mysql
+
+# Aguardar inicialização
+sleep 30
+
+# Verificar containers
+docker ps
+```
+
+5. **Configure o banco de dados**
 ```bash
 # Execute as migrações
 npm run prisma:migrate
@@ -74,7 +86,7 @@ npm run prisma:migrate
 npm run prisma:seed
 ```
 
-5. **Inicie o servidor**
+6. **Inicie o servidor**
 ```bash
 # Desenvolvimento
 npm run dev
