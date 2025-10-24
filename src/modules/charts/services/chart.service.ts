@@ -1,7 +1,7 @@
-import { ChartQuery, ChartType } from '../../schemas/chart';
-import { PieDataPoint, SeriesResponse } from '../../schemas/response';
+import { ChartQuery, ChartType } from '../../../schemas/chart';
+import { PieDataPoint, SeriesResponse } from '../../../schemas/response';
 import { ChartFactory } from '../factories/chart.factory';
-import { SaleRepository } from '../../repositories/sale.repository';
+import { SaleRepository } from '../../../repositories/sale.repository';
 
 /**
  * Serviço para geração de dados de gráficos.
@@ -9,7 +9,7 @@ import { SaleRepository } from '../../repositories/sale.repository';
 export class ChartService {
   private readonly chartFactory: ChartFactory;
 
-  constructor(private readonly saleRepository: SaleRepository) {
+  constructor(saleRepository: SaleRepository) {
     this.chartFactory = new ChartFactory(saleRepository);
   }
 

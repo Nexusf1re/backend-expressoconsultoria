@@ -10,7 +10,7 @@ export function errorMiddleware(
   error: Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ): void {
   // Registra o erro
   logger.error('Erro não tratado capturado', {

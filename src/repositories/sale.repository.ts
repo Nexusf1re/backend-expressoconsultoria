@@ -32,16 +32,25 @@ export class SaleRepository {
         },
       },
       ...aggregation,
-      orderBy: {
-        [dimension]: query.order,
-      },
-      ...(query.limit && { take: query.limit }),
     } as any);
 
-    return results.map((result) => ({
+    // Mapear resultados para incluir valores calculados
+    const mappedResults = results.map((result) => ({
       label: result[dimension] as string,
       value: this.extractValue(result, operation, field),
     }));
+
+    // Ordenar pelos valores ao invés do campo da dimensão
+    const sortedResults = mappedResults.sort((a, b) => {
+      if (query.order === 'desc') {
+        return b.value - a.value;
+      } else {
+        return a.value - b.value;
+      }
+    });
+
+    // Aplicar limite após ordenação
+    return query.limit ? sortedResults.slice(0, query.limit) : sortedResults;
   }
 
   /**

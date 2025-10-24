@@ -50,6 +50,17 @@ export class ChartController {
       if (error instanceof ZodError) {
         const firstError = error.errors[0];
         
+        if (!firstError) {
+          res.status(400).json({
+            error: {
+              code: 'VALIDATION_ERROR',
+              message: 'Erro de validação desconhecido',
+              suggestion: 'Verifique os parâmetros fornecidos'
+            },
+          });
+          return;
+        }
+        
         // Erro de tipo de gráfico inválido
         if (firstError.path.length === 0 && firstError.code === 'invalid_enum_value') {
           res.status(400).json({

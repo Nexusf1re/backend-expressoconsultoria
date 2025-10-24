@@ -9,7 +9,7 @@ export class HealthController {
   /**
    * Verifica o status da aplicação e banco de dados.
    */
-  async getHealth(req: Request, res: Response): Promise<void> {
+  async getHealth(_req: Request, res: Response): Promise<void> {
     try {
       // Testa conexão com banco de dados
       await prisma.$queryRaw`SELECT 1`;

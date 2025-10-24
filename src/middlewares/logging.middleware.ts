@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+// Imports removidos pois não são utilizados
 import pinoHttp from 'pino-http';
 import { logger } from '../config/logger';
 
@@ -10,7 +10,7 @@ export const loggingMiddleware = pinoHttp({
   genReqId: (req) => req.id,
   
   // Define nível de log baseado no status da resposta
-  customLogLevel: (req, res, err) => {
+  customLogLevel: (_req, res, err) => {
     if (res.statusCode >= 400 && res.statusCode < 500) {
       return 'warn';
     } else if (res.statusCode >= 500 || err) {

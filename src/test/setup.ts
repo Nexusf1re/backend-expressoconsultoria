@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient({
   datasources: {
     db: {
-      url: process.env.DATABASE_URL || 'mysql://root:root@localhost:3306/analytics_test',
+      url: process.env['DATABASE_URL'] || 'mysql://root:root@localhost:3306/analytics_test',
     },
   },
 });
