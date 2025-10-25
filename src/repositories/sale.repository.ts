@@ -261,6 +261,10 @@ export class SaleRepository {
       case 'avg':
         return Number((result as any)[`_avg`]?.[field] || 0);
       case 'count':
+        // Para count(*), o resultado vem em _count diretamente
+        if (field === '*') {
+          return Number((result as any)[`_count`] || 0);
+        }
         return Number((result as any)[`_count`]?.[field] || 0);
       default:
         return 0;

@@ -52,7 +52,11 @@ export function getPrismaAggregation(
     case 'avg':
       return { _avg: { [field]: true } }; // Média dos valores do campo
     case 'count':
-      return { _count: { [field]: true } }; // Contagem de registros
+      // Para count(*), usamos _count: true, para count(field) usamos _count: { field: true }
+      if (field === '*') {
+        return { _count: true }; // Contagem de todos os registros
+      }
+      return { _count: { [field]: true } }; // Contagem de registros não-nulos do campo
     default:
       throw new Error(`Operação não suportada: ${operation}`);
   }
